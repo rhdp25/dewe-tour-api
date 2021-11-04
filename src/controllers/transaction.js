@@ -2,11 +2,15 @@ const { transaction, user, trip, country } = require("../../models");
 
 exports.addTransaction = async (req, res) => {
   try {
-    const data = await transaction.create(req.body, {
-      attributes: {
-        exclude: ["createdAt", "updatedAt"],
-      },
-    });
+    const { ...data } = req.body;
+    await transaction.create(
+      { ...data, userId: req.user.id },
+      {
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+      }
+    );
     res.send({
       status: "success",
       message: "Add transaction successfuly",

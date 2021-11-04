@@ -8,6 +8,7 @@ const { addTrip, getTrips, getTrip, updateTrip, deleteTrip } = require("../contr
 const { addTransaction, getTransactions, getTransaction, updateTransaction, deleteTransaction } = require("../controllers/transaction");
 
 const { auth, adminOnly } = require("../middleware/auth");
+const { uploadFile } = require("../middleware/uploadFile");
 
 router.post("/register", register);
 router.post("/login", login);
@@ -24,10 +25,10 @@ router.get("/countries/:id", getCountry);
 router.patch("/countries/:id", auth, adminOnly, updateCountry);
 router.delete("/countries/:id", auth, adminOnly, deleteCountry);
 
-router.post("/trips", auth, adminOnly, addTrip);
+router.post("/trips", auth, adminOnly, uploadFile("image"), addTrip);
 router.get("/trips", getTrips);
 router.get("/trips/:id", getTrip);
-router.patch("/trips/:id", auth, adminOnly, updateTrip);
+router.patch("/trips/:id", auth, adminOnly, uploadFile("image"), updateTrip);
 router.delete("/trips/:id", auth, adminOnly, deleteTrip);
 
 router.post("/transactions", auth, addTransaction);
