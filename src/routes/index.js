@@ -30,7 +30,7 @@ router.get("/trips/:id", getTrip);
 router.patch("/trips/:id", auth, updateTrip);
 router.delete("/trips/:id", auth, deleteTrip);
 
-router.post("/transactions", addTransaction);
+router.post("/transactions", auth, addTransaction);
 router.get("/transactions", getTransactions);
 router.get("/transactions/:id", getTransaction);
 router.patch("/transactions/:id", auth, updateTransaction);
