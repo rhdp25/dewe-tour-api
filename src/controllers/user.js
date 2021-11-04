@@ -1,25 +1,25 @@
 const { user } = require("../../models");
 
-exports.addUser = async (req, res) => {
-  try {
-    const data = await user.create(req.body, {
-      attributes: {
-        exclude: ["createdAt", "updatedAt"],
-      },
-    });
-    res.send({
-      status: "success",
-      message: "Add user successfuly",
-      data,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      status: "failed",
-      message: "Server Error!",
-    });
-  }
-};
+// exports.addUser = async (req, res) => {
+//   try {
+//     const data = await user.create(req.body, {
+//       attributes: {
+//         exclude: ["createdAt", "updatedAt"],
+//       },
+//     });
+//     res.send({
+//       status: "success",
+//       message: "Add user successfuly",
+//       data,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send({
+//       status: "failed",
+//       message: "Server Error!",
+//     });
+//   }
+// };
 
 exports.getUsers = async (req, res) => {
   try {
