@@ -54,7 +54,6 @@ exports.register = async (req, res) => {
       status: "success",
       message: "User has successfully created",
       data: {
-        fullName: newUser.fullName,
         email: newUser.email,
         token,
       },
