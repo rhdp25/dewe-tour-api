@@ -18,3 +18,12 @@ exports.auth = (req, res, next) => {
     res.status(400).send({ message: "Invalid token" });
   }
 };
+
+exports.adminOnly = (req, res, next) => {
+  if (req.user.status && req.user.status === "admin") {
+    next();
+    return;
+  }
+
+  res.status(403).send({ message: "Forbidden" });
+};

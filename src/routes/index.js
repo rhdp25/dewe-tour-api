@@ -7,7 +7,7 @@ const { addCountry, getCountries, getCountry, updateCountry, deleteCountry } = r
 const { addTrip, getTrips, getTrip, updateTrip, deleteTrip } = require("../controllers/trip");
 const { addTransaction, getTransactions, getTransaction, updateTransaction, deleteTransaction } = require("../controllers/transaction");
 
-const { auth } = require("../middleware/auth");
+const { auth, adminOnly } = require("../middleware/auth");
 
 router.post("/register", register);
 router.post("/login", login);
@@ -15,25 +15,25 @@ router.post("/login", login);
 // router.post("/users", addUser);
 router.get("/users", getUsers);
 router.get("/users/:id", getUser);
-router.patch("/users/:id", auth, updateUser);
-router.delete("/users/:id", auth, deleteUser);
+router.patch("/users/:id", auth, adminOnly, updateUser);
+router.delete("/users/:id", auth, adminOnly, deleteUser);
 
-router.post("/countries", auth, addCountry);
+router.post("/countries", auth, adminOnly, addCountry);
 router.get("/countries", getCountries);
 router.get("/countries/:id", getCountry);
-router.patch("/countries/:id", auth, updateCountry);
-router.delete("/countries/:id", auth, deleteCountry);
+router.patch("/countries/:id", auth, adminOnly, updateCountry);
+router.delete("/countries/:id", auth, adminOnly, deleteCountry);
 
-router.post("/trips", auth, addTrip);
+router.post("/trips", auth, adminOnly, addTrip);
 router.get("/trips", getTrips);
 router.get("/trips/:id", getTrip);
-router.patch("/trips/:id", auth, updateTrip);
-router.delete("/trips/:id", auth, deleteTrip);
+router.patch("/trips/:id", auth, adminOnly, updateTrip);
+router.delete("/trips/:id", auth, adminOnly, deleteTrip);
 
 router.post("/transactions", auth, addTransaction);
 router.get("/transactions", getTransactions);
 router.get("/transactions/:id", getTransaction);
-router.patch("/transactions/:id", auth, updateTransaction);
-router.delete("/transactions/:id", auth, deleteTransaction);
+router.patch("/transactions/:id", auth, adminOnly, updateTransaction);
+router.delete("/transactions/:id", auth, adminOnly, deleteTransaction);
 
 module.exports = router;
