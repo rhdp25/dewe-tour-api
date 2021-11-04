@@ -9,23 +9,23 @@ exports.addCountry = async (req, res) => {
     });
 
     if (countryExist) {
-      res.status(400).send({
+      return res.status(400).send({
         status: "failed",
         message: "Country already exist",
       });
-    } else {
-      const data = await country.create(req.body, {
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
-        },
-      });
-
-      res.send({
-        status: "success",
-        message: "Add country successfuly",
-        data,
-      });
     }
+
+    const data = await country.create(req.body, {
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+
+    res.send({
+      status: "success",
+      message: "Add country successfuly",
+      data,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send({
