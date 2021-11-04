@@ -20,7 +20,7 @@ exports.auth = (req, res, next) => {
 };
 
 exports.adminOnly = (req, res, next) => {
-  if (req.user.status && req.user.status === "admin") {
+  if (req.user.role && req.user.role === "admin") {
     next();
     return;
   }
