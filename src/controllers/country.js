@@ -24,7 +24,10 @@ exports.addCountry = async (req, res) => {
     res.send({
       status: "success",
       message: "Add country successfuly",
-      data,
+      data: {
+        id: data.id,
+        name: data.name,
+      },
     });
   } catch (error) {
     console.log(error);

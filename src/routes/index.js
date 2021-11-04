@@ -21,8 +21,8 @@ router.delete("/users/:id", auth, deleteUser);
 router.post("/countries", auth, addCountry);
 router.get("/countries", getCountries);
 router.get("/countries/:id", getCountry);
-router.patch("/countries/:id", updateCountry);
-router.delete("/countries/:id", deleteCountry);
+router.patch("/countries/:id", auth, updateCountry);
+router.delete("/countries/:id", auth, deleteCountry);
 
 router.post("/trips", auth, addTrip);
 router.get("/trips", getTrips);
