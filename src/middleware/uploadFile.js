@@ -1,34 +1,36 @@
+// import package here
 const multer = require("multer");
 
 exports.uploadFile = (image) => {
-  // initialization multer diskstorage
-  // make destination file for upload
+  // define storage destination
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, "uploads"); //file storage location
+      cb(null, "uploads");
     },
     filename: function (req, file, cb) {
-      cb(null, Date.now() + "-" + file.originalname.replace(/\s/g, "")); // rename filename by date now + original filename
+      //second params is the filename
+      cb(null, Date.now() + "-" + file.originalname.replace(/\s/g, ""));
     },
   });
 
-  // function for file filter based on extension
-  const fileFilter = function (req, file, cb) {
-    if (file.fieldname === imageFile) {
-      if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+  // define function for file filtering
+  const fileFilter = (req, file, cb) => {
+    if (file.fieldname === image) {
+      if (!file.originalname.match(/\.(jpg|JPG|JPEG|png|PNG|svg)$/)) {
         req.fileValidationError = {
           message: "Only image files are allowed!",
         };
-        return cb(new Error("Only image files are allowed!"), false);
+
+        return cb(new Error("Only image files are allowed"), false);
       }
+      cb(null, true);
     }
-    cb(null, true);
   };
 
+  // maximum size for file upload
   const sizeInMB = 10;
-  const maxSize = sizeInMB * 1024 * 1024; // Maximum file size in MB
+  const maxSize = sizeInMB * 1024 * 1024;
 
-  // generate multer instance for upload include storage, validation and max file size
   const upload = multer({
     storage,
     fileFilter,
@@ -42,30 +44,26 @@ exports.uploadFile = (image) => {
     },
   ]);
 
-  // middleware handler
   return (req, res, next) => {
     upload(req, res, function (err) {
-      // show an error if validation failed
-      if (req.fileValidationError) return res.status(400).send(req.fileValidationError);
+      if (req.fileValidationError) {
+        return res.status(400).send(req.fileValidationError);
+      }
 
-      // show an error if file doesn't provided in req
-      // if (!req.file && !err)
-      //   return res.status(400).send({
-      //     message: "Please select files to upload",
-      //   });
+      if (!req.files && !err) {
+        return res.status(400).send({
+          message: "Please select file to upload",
+        });
+      }
 
-      // show an error if it exceeds the max size
       if (err) {
         if (err.code === "LIMIT_FILE_SIZE") {
           return res.status(400).send({
-            message: "Max file sized 10MB",
+            message: "Max file sized is 10MB",
           });
         }
         return res.status(400).send(err);
       }
-
-      // if okay next to controller
-      // in the controller we can access using req.file
       return next();
     });
   };
