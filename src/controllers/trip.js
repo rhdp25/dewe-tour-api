@@ -1,5 +1,3 @@
-const fs = require("fs");
-const path = require("path");
 const { trip, country } = require("../../models");
 
 exports.addTrip = async (req, res) => {
@@ -108,7 +106,7 @@ exports.getTrip = async (req, res) => {
       },
     });
 
-    const { accomodation, countryId, dateTrip, day, description, eat, image, night, price, quota, title, transportation } = data;
+    const { accomodation, countryId, dateTrip, day, description, eat, image, night, price, quota, quotaLeft, title, transportation } = data;
 
     const dataImage = JSON.parse(image);
     const newDataImage = [];
@@ -120,19 +118,21 @@ exports.getTrip = async (req, res) => {
       status: "success",
       message: "Get trip successfuly",
       data: {
-        accomodation,
+        id,
+        title,
         countryId,
-        dateTrip,
-        day,
-        description,
+        country: data.country,
+        accomodation,
+        transportation,
         eat,
-        image: newDataImage,
+        day,
         night,
+        dateTrip,
         price,
         quota,
-        title,
-        transportation,
-        country: data.country,
+        quotaLeft,
+        description,
+        image: newDataImage,
       },
     });
   } catch (error) {
@@ -146,6 +146,7 @@ exports.getTrip = async (req, res) => {
 
 exports.updateTrip = async (req, res) => {
   const { id } = req.params;
+  const token = req.user;
 
   try {
     const { image } = req.files;
@@ -158,38 +159,37 @@ exports.updateTrip = async (req, res) => {
 
     await trip.update(
       {
+        quotaLeft: req.body.quotaLeft,
         image: JSON.stringify(dataImage),
       },
       {
         where: {
           id,
         },
-      }
+      },
+      token
     );
 
-    // const updateData = await trip.findOne({
-    //   where: {
-    //     id,
-    //   },
-    //   include: {
-    //     model: country,
-    //     as: "country",
-    //     attributes: {
-    //       exclude: ["createdAt", "updatedAt"],
-    //     },
-    //   },
-    //   attributes: {
-    //     exclude: ["createdAt", "updatedAt", "countryId"],
-    //   },
-    // });
+    const updateData = await trip.findOne({
+      where: {
+        id,
+      },
+      include: {
+        model: country,
+        as: "country",
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+      },
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "countryId"],
+      },
+    });
 
     res.send({
       status: "success",
       message: "Update trip successfuly",
-      data,
-      // : {
-      //   trip: updateData,
-      // },
+      data: updateData,
     });
   } catch (error) {
     console.log(error);
@@ -201,6 +201,7 @@ exports.updateTrip = async (req, res) => {
 };
 
 exports.deleteTrip = async (req, res) => {
+  const { idUser } = req.user;
   const { id } = req.params;
 
   try {
@@ -208,11 +209,22 @@ exports.deleteTrip = async (req, res) => {
       where: {
         id,
       },
+      idUser,
+    });
+
+    const data = await trip.findOne({
+      where: {
+        id,
+      },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
     });
 
     res.send({
       status: "success",
       message: "Delete trip successfuly",
+      data,
     });
   } catch (error) {
     console.log(error);

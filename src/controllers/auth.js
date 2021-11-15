@@ -106,12 +106,16 @@ exports.login = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ id: userExist.id, role: userExist.role }, process.env.TOKEN_KEY);
+    const token = jwt.sign({ id: userExist.id, email: userExist.email, role: userExist.role }, process.env.TOKEN_KEY);
 
     res.status(200).send({
       status: "success",
       data: {
+        fullName: userExist.fullName,
         email: userExist.email,
+        phone: userExist.phone,
+        address: userExist.address,
+        role: userExist.role,
         token,
       },
     });
@@ -150,9 +154,51 @@ exports.checkAuth = async (req, res) => {
           id: dataUser.id,
           fullName: dataUser.fullName,
           email: dataUser.email,
+          phone: dataUser.phone,
+          address: dataUser.address,
+          gender: dataUser.gender,
           role: dataUser.role,
         },
       },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status({
+      status: "failed",
+      message: "Server Error",
+    });
+  }
+};
+
+exports.user = async (req, res) => {
+  try {
+    const dataUser = await user.findOne({
+      where: {
+        id: req.user.id,
+      },
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "password"],
+      },
+    });
+
+    if (!dataUser) {
+      return res.status(404).send({
+        status: "failed",
+      });
+    }
+
+    res.send({
+      status: "success",
+      data: [
+        {
+          id: dataUser.id,
+          fullName: dataUser.fullName,
+          email: dataUser.email,
+          phone: dataUser.phone,
+          address: dataUser.address,
+          role: dataUser.role,
+        },
+      ],
     });
   } catch (error) {
     console.log(error);

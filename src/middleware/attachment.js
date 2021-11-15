@@ -28,7 +28,7 @@ exports.attachmentFile = (attachment) => {
   };
 
   // maximum size for file upload
-  const sizeInMB = 2;
+  const sizeInMB = 5;
   const maxSize = sizeInMB * 1024 * 1024;
 
   const upload = multer({
