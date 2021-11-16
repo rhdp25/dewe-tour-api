@@ -49,9 +49,7 @@ exports.addTransaction = async (req, res) => {
       res.send({
         status: "success",
         message: "Add transaction successfuly",
-        data: {
-          data,
-        },
+        data,
       });
     }
   } catch (error) {
