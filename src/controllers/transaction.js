@@ -272,7 +272,7 @@ exports.updateTransaction = async (req, res) => {
     await transaction.update(
       {
         status: req.body.status,
-        attachment: process.env.PATH_ATTACHMENT + attachment[0].filename,
+        attachment: req.files.attachment[0].filename,
       },
       {
         where: {

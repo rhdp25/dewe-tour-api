@@ -29,7 +29,7 @@ router.delete("/countries/:id", auth, adminOnly, deleteCountry);
 router.post("/trips", auth, adminOnly, uploadFile("image"), addTrip);
 router.get("/trips", getTrips);
 router.get("/trips/:id", getTrip);
-router.patch("/trips/:id", auth, adminOnly, uploadFile("image"), updateTrip);
+router.patch("/trips/:id", auth, updateTrip);
 router.delete("/trips/:id", auth, adminOnly, deleteTrip);
 
 router.post("/transactions", auth, addTransaction);
@@ -39,7 +39,7 @@ router.patch("/transactions/:id", auth, attachmentFile("attachment"), updateTran
 
 router.get("/history-trips", auth, getHistoryTrip);
 router.get("/incoming-transactions", auth, getIncomeTransaction);
-router.patch("incoming-transactions/:id", auth, adminOnly, updateIncomingTransaction);
+router.patch("/incoming-transactions/:id", auth, adminOnly, updateIncomingTransaction);
 router.delete("/transactions/:id", auth, deleteTransaction);
 
 module.exports = router;

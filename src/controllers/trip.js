@@ -145,22 +145,12 @@ exports.getTrip = async (req, res) => {
 };
 
 exports.updateTrip = async (req, res) => {
-  const { id } = req.params;
   const token = req.user;
-
+  const { id } = req.params;
   try {
-    const { image } = req.files;
-
-    const dataImage = [];
-
-    image.map((item) => {
-      dataImage.push(item.filename);
-    });
-
     await trip.update(
       {
         quotaLeft: req.body.quotaLeft,
-        image: JSON.stringify(dataImage),
       },
       {
         where: {
@@ -170,34 +160,84 @@ exports.updateTrip = async (req, res) => {
       token
     );
 
-    const updateData = await trip.findOne({
+    const data = await trip.findOne({
+      include: [
+        {
+          model: country,
+          attributes: {
+            exclude: ["createdAt", "updatedAt"],
+          },
+        },
+      ],
       where: {
         id,
       },
-      include: {
-        model: country,
-        as: "country",
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
-        },
-      },
       attributes: {
-        exclude: ["createdAt", "updatedAt", "countryId"],
+        exclude: ["createdAt", "updatedAt"],
       },
     });
-
     res.send({
       status: "success",
-      message: "Update trip successfuly",
-      data: updateData,
+      message: "Edit trip success",
+      datas: data,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       status: "failed",
-      message: "Server Error!",
+      message: "Server Error",
     });
   }
+  // try {
+  //   const { image } = req.files;
+
+  //   const dataImage = [];
+
+  //   image.map((item) => {
+  //     dataImage.push(item.filename);
+  //   });
+
+  //   await trip.update(
+  //     {
+  //       quotaLeft: req.body.quotaLeft,
+  //       image: JSON.stringify(dataImage),
+  //     },
+  //     {
+  //       where: {
+  //         id,
+  //       },
+  //     },
+  //     token
+  //   );
+
+  //   const updateData = await trip.findOne({
+  //     where: {
+  //       id,
+  //     },
+  //     include: {
+  //       model: country,
+  //       as: "country",
+  //       attributes: {
+  //         exclude: ["createdAt", "updatedAt"],
+  //       },
+  //     },
+  //     attributes: {
+  //       exclude: ["createdAt", "updatedAt", "countryId"],
+  //     },
+  //   });
+
+  //   res.send({
+  //     status: "success",
+  //     message: "Update trip successfuly",
+  //     data: updateData,
+  //   });
+  // } catch (error) {
+  //   console.log(error);
+  //   res.status(500).send({
+  //     status: "failed",
+  //     message: "Server Error!",
+  //   });
+  // }
 };
 
 exports.deleteTrip = async (req, res) => {
