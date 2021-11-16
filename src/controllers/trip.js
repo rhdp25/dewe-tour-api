@@ -21,7 +21,7 @@ exports.addTrip = async (req, res) => {
     }
 
     const data = await trip.create(
-      { ...req.body, image: imageToString },
+      { ...req.body, quotaLeft: req.body.quota, image: imageToString },
       {
         attributes: {
           exclude: ["createdAt", "updatedAt"],
